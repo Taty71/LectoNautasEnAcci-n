@@ -32,6 +32,7 @@ app.use(helmet({ contentSecurityPolicy: false }));
 const ORIGENES_PERMITIDOS = [
   'http://localhost:3000',
   'http://127.0.0.1:3000',
+  'https://lectonautasenacci-n.onrender.com'
 ];
 
 app.use(cors({
