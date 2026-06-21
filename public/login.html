@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ingresar | Lectonautas</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="background-bubbles">
+    <div class="bubble bubble1"></div>
+    <div class="bubble bubble2"></div>
+    <div class="bubble bubble3"></div>
+    <div class="bubble bubble4"></div>
+  </div>
+
+  <main class="auth-shell">
+    <section class="auth-card" aria-labelledby="login-title">
+      <h1 id="login-title">Lectonautas</h1>
+      <p>Accedé con tu correo docente / institucional y la clave generada al crear tu usuario.</p>
+      <p class="auth-note">La clave se forma con las iniciales de nombre y apellido, más los últimos 3 dígitos del DNI.
+      </p>
+
+      <form id="loginForm" class="auth-form">
+        <div class="form-group">
+          <label for="login-email">Correo</label>
+          <input type="email" id="login-email" name="email" placeholder="docente@escuela.edu" autocomplete="email"
+            required />
+        </div>
+
+        <div class="form-group">
+          <label for="login-password">Contraseña</label>
+          <input type="password" id="login-password" name="password" placeholder="Tu contraseña"
+            autocomplete="current-password" required />
+        </div>
+
+        <button type="submit" id="btn-ingresar" class="btn-guardar">Ingresar</button>
+        <p id="login-mensaje" class="login-mensaje" role="status" aria-live="polite"></p>
+        <p class="auth-link-row">
+          ¿Todavía no tenés usuario?
+          <a class="auth-link" href="register.html">Crear usuario</a>
+        </p>
+      </form>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,61 @@
+# .clinerules — Contexto Global de Desarrollo: LectoNautas
+
+## 1. Stack Tecnológico
+
+- **Backend:** Node.js, Express, Mongoose/MongoDB
+- **Frontend:** Vanilla JavaScript (Web Speech API), HTML5, CSS3
+- Sin frameworks de frontend (React, Vue, Angular, etc.)
+
+## 2. Arquitectura
+
+- Separación estricta en capas:
+  - `/models` — Esquemas Mongoose
+  - `/routes` — Controladores y rutas Express
+  - `/public` — Assets estáticos (HTML, CSS, JS del cliente)
+- No mezclar lógica de negocio con rutas ni con vistas.
+
+## 3. Vocabulario Pedagógico Obligatorio
+
+- ❌ PROHIBIDO: `alumno`, `alumnos`, `alumno/a`, `alumn@`
+- ✅ OBLIGATORIO: `estudiante`, `estudiantes`
+- Esta regla aplica sin excepción a:
+  - Nombres de variables y funciones
+  - Esquemas y campos de base de datos
+  - Comentarios en el código
+  - Mensajes de UI y respuestas de API
+  - Explicaciones y documentación
+
+## 4. Enfoque UX — Docentes de Nivel Primario y Nivel Secundario
+
+- Las interfaces deben ser claras, grandes y con poco ruido visual.
+- Tolerancia a errores de transcripción del habla (Web Speech API):
+  - Normalizar texto antes de comparar (minúsculas, sin tildes, sin puntuación).
+  - Mostrar retroalimentación visual inmediata ante errores.
+  - Evitar mensajes de error técnicos; usar lenguaje amigable y accionable.
+- Priorizar accesibilidad y flujo de trabajo sin fricción para el docente.
+
+## 5. Reglas semáforo
+
+Nivel Primario (Ejemplo 3° Grado):
+
+🔴 Rojo: Menos de 60 PPM.
+
+🟡 Amarillo: Entre 60 y 85 PPM.
+
+🟢 Verde: Más de 85 PPM.
+
+Nivel Secundario — Ciclo Básico (1° a 3° Año):
+
+🔴 Rojo: Menos de 100 PPM.
+
+🟡 Amarillo: Entre 100 y 125 PPM.
+
+🟢 Verde: Más de 125 PPM.
+
+Nivel Secundario — Ciclo Orientado (4° a 6°) (4° a 7° Escuelas Técnicas):
+
+🔴 Rojo: Menos de 120 PPM.
+
+🟡 Amarillo: Entre 120 y 145 PPM.
+
+🟢 Verde: Más de 145 PPM.
