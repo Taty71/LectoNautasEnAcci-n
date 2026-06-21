@@ -82,6 +82,27 @@ mongoose.connect(process.env.MONGO_URI)
 app.use('/api/auth',     limiteAuth, require('./routes/authRoutes'));
 app.use('/api/lecturas',             require('./routes/lecturaRoutes'));
 
+// ── RUTA TEMPORAL DE DESARROLLO (Recorte de Logos en Cliente) ─────────────────
+const fs = require('fs');
+const path = require('path');
+app.post('/api/save-image', express.json({ limit: '3mb' }), (req, res) => {
+  try {
+    const { name, base64 } = req.body;
+    if (!name || !base64) {
+      return res.status(400).json({ success: false, error: 'Parámetros inválidos' });
+    }
+    const cleanBase64 = base64.replace(/^data:image\/\w+;base64,/, "");
+    const buffer = Buffer.from(cleanBase64, 'base64');
+    const destPath = path.join(__dirname, 'public', 'recursos', name);
+    fs.writeFileSync(destPath, buffer);
+    console.log(`✅ [Desarrollo] Imagen recortada guardada: ${name}`);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Error al guardar imagen:', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 // ── 8. MANEJO GLOBAL DE ERRORES ───────────────────────────────────────────────
 // Captura cualquier error que no haya sido manejado en las rutas.
 // En desarrollo muestra el stack trace; en producción solo el mensaje.

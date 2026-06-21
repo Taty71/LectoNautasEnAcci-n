@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>¡Lectonautas en Acción!</title>
+    <link rel="icon" type="image/png" href="./recursos/logoLNautas1.png?v=5" />
     <link rel="stylesheet" href="styles.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap"
@@ -11,6 +12,11 @@
     />
   </head>
   <body>
+    <!-- Logo flotante en la esquina -->
+    <a href="index.html" class="logo-esquina" title="Ir al Inicio">
+      <img src="./recursos/logoLNautas1.png" alt="Logo Lectonautas" />
+    </a>
+
     <!-- Barra de acciones superior: Panel del Docente y Cerrar Sesión -->
     <div class="barra-acciones">
       <a href="panel.html" id="btn-ir-panel" class="btn-panel">📋 Mi Historial</a>
@@ -242,6 +248,12 @@
         </button>
       </div>
     </div>
+
+    <!-- Footer de marca -->
+    <footer class="app-footer">
+      <span class="footer-desarrollador">via</span>
+      <img src="./recursos/logo2b.png" alt="Moon Solution" class="footer-logo" />
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>

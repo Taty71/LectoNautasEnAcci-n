@@ -177,7 +177,7 @@ img {
   z-index: 1;
   /* Espacio superior para que no quede tapado por la barra de acciones */
   width: min(960px, calc(100% - 2rem));
-  margin: 5rem auto 3rem; /* 5rem = espacio para la barra fija */
+  margin: 5rem auto 220px; /* Espacio extra abajo para el footer fijo */
   padding: 1.8rem;
   border-radius: 24px;
   background: rgba(255, 255, 255, 0.55);
@@ -202,7 +202,7 @@ img {
   place-items: center;
   position: relative;
   z-index: 1;
-  padding: 1.5rem 1rem;
+  padding: 1.5rem 1rem 220px; /* Espacio extra abajo para que el footer no tape el card */
 }
 
 .auth-card {
@@ -1001,3 +1001,108 @@ textarea:focus {
     min-height: 100px;
   }
 }
+
+/* ══════════════════════════════════════════════════
+   FOOTER CON LOGO
+   ══════════════════════════════════════════════════ */
+.app-footer {
+  position: absolute; /* Cambiado a absolute para que baje con el contenido y no flote fijo tapando cosas */
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  text-align: center;
+  opacity: 0.85;
+  z-index: 9999;
+  pointer-events: none; /* No interfiere con clics */
+  display: flex;
+  flex-direction: column; /* Volvemos a columna para que el texto esté arriba del logo */
+  align-items: center;
+  gap: 0.1rem;
+}
+
+.footer-logo {
+  height: 200px; /* Tamaño adaptado para estar abajo en el centro */
+  max-height: 20vh; /* Responsive: nunca supera el 20% del alto de la pantalla */
+  max-width: 60vw;  /* Un poco más de ancho permitido al estar centrado */
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+/* Ajustes responsivos para el footer en pantallas chicas */
+@media (max-width: 768px) {
+  .app-footer {
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .footer-logo {
+    height: 100px; /* Tamaño apropiado para celular */
+  }
+}
+
+/* ══════════════════════════════════════════════════
+   ESTILOS ADICIONALES: LOGO ESQUINA Y DESARROLLADOR
+   ══════════════════════════════════════════════════ */
+
+/* Texto descriptivo de la empresa desarrolladora en el footer */
+.footer-desarrollador {
+  font-size: 0.65rem; /* Pequeño y delicado */
+  color: rgba(34, 58, 109, 0.55);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase; /* En mayúsculas, queda más elegante */
+  margin-bottom: -2px;
+}
+
+/* Logo de Lectonautas en la esquina (delicado y flotante) */
+.logo-esquina {
+  position: fixed;
+  top: 1rem;
+  left: 1.5rem;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  text-decoration: none;
+}
+
+.logo-esquina img {
+  height: 250px; /* Tamaño muy aumentado para compensar los bordes vacíos sin recortar la imagen */
+  max-height: 25vh; /* Responsive: se achica en pantallas bajitas */
+  max-width: 40vw;  /* Responsive: evita ocupar media pantalla en horizontal */
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(34, 58, 109, 0.12));
+}
+
+.logo-esquina:hover {
+  transform: scale(1.06) rotate(-2deg);
+}
+
+/* Ajustes responsivos para pantallas chicas (móviles/tablets) */
+@media (max-width: 768px) {
+  .logo-esquina {
+    position: absolute;
+    top: 1rem;
+    left: 0;
+    right: 0;
+    justify-content: center; /* Centrado arriba del card */
+  }
+  .logo-esquina img {
+    height: 120px; /* Tamaño apropiado para celular */
+    max-height: 18vh;
+  }
+  .auth-shell {
+    padding-top: 140px; /* Evita que el logo Lectonautas tape el card de login/registro */
+  }
+}
+
+/* Evitar superposición en el Panel del Docente (pantallas medianas y chicas) */
+@media (max-width: 1200px) {
+  .panel-body .logo-esquina {
+    display: none;
+  }
+}
+
+
+
