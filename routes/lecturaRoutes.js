@@ -45,16 +45,21 @@ router.post('/', verificarToken, permitirRoles('Docente', 'Administrador'), asyn
         }
 
         // ── Validación de rangos realistas ────────────────────────────────────
-        // Un tiempo menor a 1 s o mayor a 120 s no es un escenario de lectura válido.
-        // Más de 500 palabras en 120 s tampoco es realista (≈ 250 PPM es el límite humano).
+        // El límite humano de lectura es ~250 PPM. En 2 minutos (el máximo permitido)
+        // eso son 500 palabras. Usamos 600 como margen de seguridad.
+        // Si se supera, es probable que haya un error de duplicación en el reconocedor.
         const palabras = Number(palabrasContadas);
         const tiempo   = Number(tiempoEmpleadoSegundos);
 
         if (!Number.isFinite(palabras) || palabras < 0 || palabras > 600) {
-            return res.status(400).json({ success: false, error: 'Cantidad de palabras fuera de rango (0–600).' });
+            return res.status(400).json({
+                success: false,
+                error: `Se registraron ${palabras} palabras, lo cual supera el límite esperado. ` +
+                       'Intentá la lectura nuevamente. Si el problema persiste, recargá la página.'
+            });
         }
         if (!Number.isFinite(tiempo) || tiempo < 1 || tiempo > 120) {
-            return res.status(400).json({ success: false, error: 'Tiempo de lectura fuera de rango (1–120 segundos).' });
+            return res.status(400).json({ success: false, error: 'Tiempo de lectura fuera de rango (1-120 segundos). Intentá nuevamente.' });
         }
 
         // ── Validar nivel y ciclo contra valores permitidos ───────────────────

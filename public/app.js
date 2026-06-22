@@ -226,6 +226,10 @@ function initMainPage() {
   let pausasDetectadas = 0;
   let timeoutOcultarGuia = null;
   let timeoutVolverInicio = null;
+  // 🔧 FIX: bandera para ignorar el primer evento onresult
+  // después de un reinicio automático del reconocedor, que puede
+  // traer fragmentos ya procesados y causar texto duplicado.
+  let reiniciandoRecognition = false;
 
   const UMBRALES_GUIA = {
     Primario: { Primario: { amarillo: 60, verde: 86 } },
@@ -364,7 +368,16 @@ function initMainPage() {
 
   if (recognition) {
     recognition.onresult = (event) => {
+      // 🔧 FIX: Si acabamos de reiniciar el reconocedor automáticamente,
+      // ignoramos el primer resultado para evitar procesar fragmentos duplicados.
+      if (reiniciandoRecognition) {
+        reiniciandoRecognition = false;
+        return;
+      }
+
       let interimTranscript = '';
+      // Empezamos siempre desde event.resultIndex para no reprocesar
+      // fragmentos que ya fueron marcados como isFinal en eventos anteriores.
       for (let i = event.resultIndex; i < event.results.length; i++) {
         const fragmento = event.results[i][0].transcript;
         if (event.results[i].isFinal) {
@@ -383,6 +396,9 @@ function initMainPage() {
     };
 
     recognition.onerror = (event) => {
+      // Ignoramos errores de 'aborted' que ocurren al hacer recognition.abort()
+      // de forma intencional (por ejemplo, al limpiar el estado antes de reiniciar).
+      if (event.error === 'aborted') return;
       if (event.error === 'not-allowed') {
         micStatusEl.textContent = '🚫 Necesitamos permiso para usar el micrófono.';
         detenerLectura(false);
@@ -390,11 +406,19 @@ function initMainPage() {
     };
 
     recognition.onend = () => {
+      // Si ya no estamos leyendo, no reiniciamos el reconocedor.
       if (!leyendo) return;
       if (tiempoRestante > 0) {
+        // 🔧 FIX: Marcamos que estamos reiniciando para que el primer
+        // onresult después del reinicio sea ignorado (evita duplicados).
+        reiniciandoRecognition = true;
         try {
           recognition.start();
-        } catch (error) {}
+        } catch (error) {
+          // Si falla el inicio, limpiamos la bandera para no bloquear
+          // los siguientes eventos onresult legítimos.
+          reiniciandoRecognition = false;
+        }
       }
     };
   }
@@ -416,7 +440,13 @@ function initMainPage() {
       return;
     }
 
+    // 🔧 FIX: Limpiamos todo el estado de la sesión anterior.
+    // Usamos abort() en lugar de stop() para forzar que el reconocedor
+    // quede en estado limpio y no arrastre resultados de la sesión anterior.
+    try { recognition.abort(); } catch (_) {}
+
     finalTranscript = '';
+    reiniciandoRecognition = false;  // Resetear la bandera anti-duplicados
     textoEscuchadoEl.textContent = '...';
     palabrasContEl.textContent = '0';
     tiempoRestante = 60;
@@ -438,9 +468,10 @@ function initMainPage() {
     micStatusEl.textContent = '¡Escuchando atentamente! 👂';
     actualizarMensajeGuia('grabando');
 
-    try {
-      recognition.start();
-    } catch (error) {}
+    // Pequeño delay para dar tiempo a que abort() finalice antes de start()
+    setTimeout(() => {
+      try { recognition.start(); } catch (_) {}
+    }, 100);
     iniciarTemporizador();
   });
 
