@@ -68,8 +68,19 @@ const limiteAuth = rateLimit({
 });
 
 // ── 5. ARCHIVOS ESTÁTICOS ─────────────────────────────────────────────────────
-// Servimos la interfaz gráfica (HTML, CSS, JS del cliente)
-app.use(express.static('public'));
+// Servimos la interfaz gráfica (HTML, CSS, JS del cliente).
+// En desarrollo desactivamos el caché para que los cambios en CSS/JS
+// se vean de inmediato sin hacer Ctrl+Shift+R cada vez.
+const esModoDesarrollo = process.env.NODE_ENV !== 'production';
+app.use(express.static('public', {
+  setHeaders: (res, filePath) => {
+    if (esModoDesarrollo) {
+      // Instruye al navegador a NO guardar copias en caché durante el desarrollo
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+    }
+  }
+}));
 
 // ── 6. CONEXIÓN A MONGODB ─────────────────────────────────────────────────────
 mongoose.connect(process.env.MONGO_URI)

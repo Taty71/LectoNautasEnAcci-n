@@ -1,190 +1,197 @@
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Panel del Docente · Lectonautas</title>
-    <meta name="description" content="Historial completo de lecturas evaluadas por el docente en Lectonautas." />
-    <link rel="icon" type="image/png" href="./recursos/logoLNautas1.png?v=5" />
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="panel.css" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body class="panel-body">
-    <!-- Logo flotante en la esquina -->
-    <a href="index.html" class="logo-esquina" title="Ir al Inicio">
-      <img src="./recursos/logoLNautas1.png" alt="Logo Lectonautas" />
-    </a>
 
-    <!-- Burbujas de fondo decorativas -->
-    <div class="background-bubbles" aria-hidden="true">
-      <div class="bubble bubble1"></div>
-      <div class="bubble bubble2"></div>
-      <div class="bubble bubble3"></div>
-      <div class="bubble bubble4"></div>
-    </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel del Docente · Lectonautas</title>
+  <meta name="description" content="Historial completo de lecturas evaluadas por el docente en Lectonautas." />
+  <link rel="icon" type="image/png" href="./recursos/logoLNautas1.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="panel.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet" />
+</head>
 
-    <div class="panel-shell">
+<body class="panel-body">
+  <!-- Logo flotante en la esquina -->
+  <a href="index.html" class="logo-esquina" title="Ir al Inicio">
+    <img src="./recursos/logoLNautas1.png" alt="Logo Lectonautas" />
+  </a>
 
-      <!-- ── ENCABEZADO DEL PANEL ── -->
-      <header class="panel-header">
-        <a href="index.html" class="btn-volver" id="btn-volver" aria-label="Volver al evaluador">
-          ← Volver al evaluador
-        </a>
-        <div class="panel-titulo-grupo">
-          <img src="./recursos/astronauta.png" alt="Cosmo" class="panel-logo" />
-          <div>
-            <h1 class="panel-titulo">Panel del Docente</h1>
-            <p class="panel-subtitulo">Tu historial de evaluaciones de velocidad lectora</p>
-            <!-- Nombre del docente logueado, se rellena desde panel.js -->
-            <p class="panel-docente-nombre" id="panel-docente-nombre"></p>
-          </div>
+  <!-- Burbujas de fondo decorativas -->
+  <div class="background-bubbles" aria-hidden="true">
+    <div class="bubble bubble1"></div>
+    <div class="bubble bubble2"></div>
+    <div class="bubble bubble3"></div>
+    <div class="bubble bubble4"></div>
+  </div>
+
+  <div class="panel-shell">
+
+    <!-- ── ENCABEZADO DEL PANEL ── -->
+    <header class="panel-header">
+      <a href="index.html" class="btn-volver" id="btn-volver" aria-label="Volver al evaluador">
+        ← Volver al evaluador
+      </a>
+      <div class="panel-titulo-grupo">
+        <img src="./recursos/astronauta.png" alt="Cosmo" class="panel-logo" />
+        <div>
+          <h1 class="panel-titulo">Panel del Docente</h1>
+          <p class="panel-subtitulo">Tu historial de evaluaciones de velocidad lectora</p>
+          <!-- Nombre del docente logueado, se rellena desde panel.js -->
+          <p class="panel-docente-nombre" id="panel-docente-nombre"></p>
         </div>
-        <button id="btn-cerrar-sesion" class="btn-cerrar-sesion" type="button">
-          Cerrar Sesión
-        </button>
-      </header>
-
-      <!-- ── ESTADÍSTICAS RÁPIDAS ── -->
-      <section class="stats-row" aria-label="Estadísticas rápidas">
-        <div class="stat-card" id="stat-total">
-          <span class="stat-numero" id="stat-total-num">—</span>
-          <span class="stat-label">Evaluaciones</span>
-        </div>
-        <div class="stat-card stat-verde" id="stat-verdes">
-          <span class="stat-numero" id="stat-verde-num">—</span>
-          <span class="stat-label">🟢 Verde</span>
-        </div>
-        <div class="stat-card stat-amarillo" id="stat-amarillos">
-          <span class="stat-numero" id="stat-amarillo-num">—</span>
-          <span class="stat-label">🟡 Amarillo</span>
-        </div>
-        <div class="stat-card stat-rojo" id="stat-rojos">
-          <span class="stat-numero" id="stat-rojo-num">—</span>
-          <span class="stat-label">🔴 Rojo</span>
-        </div>
-      </section>
-
-      <!-- ── FILTROS ── -->
-      <section class="filtros-bar" aria-label="Filtros del historial">
-        <div class="filtro-grupo">
-          <label for="filtro-color">Color del semáforo:</label>
-          <select id="filtro-color">
-            <option value="">Todos</option>
-            <option value="verde">🟢 Verde</option>
-            <option value="amarillo">🟡 Amarillo</option>
-            <option value="rojo">🔴 Rojo</option>
-          </select>
-        </div>
-        <div class="filtro-grupo">
-          <label for="filtro-nivel">Nivel:</label>
-          <select id="filtro-nivel">
-            <option value="">Todos</option>
-            <option value="Primario">Primario</option>
-            <option value="Secundario">Secundario</option>
-          </select>
-        </div>
-        <div class="filtro-grupo busqueda-grupo">
-          <label for="filtro-busqueda">Buscar estudiante:</label>
-          <input
-            type="search"
-            id="filtro-busqueda"
-            placeholder="Nombre o apellido..."
-            autocomplete="off"
-          />
-        </div>
-      </section>
-
-      <!-- ── ÁREA PRINCIPAL: LISTA + DETALLE ── -->
-      <main class="panel-main" id="panel-main">
-
-        <!-- Estado de carga -->
-        <div class="estado-carga" id="estado-carga" role="status" aria-live="polite">
-          <div class="spinner" aria-hidden="true"></div>
-          <p>Cargando historial...</p>
-        </div>
-
-        <!-- Estado vacío -->
-        <div class="estado-vacio oculto" id="estado-vacio" role="status">
-          <div class="vacio-icono" aria-hidden="true">🚀</div>
-          <p class="vacio-titulo">¡Aún no hay evaluaciones!</p>
-          <p class="vacio-desc">Cuando evalúes a un estudiante en el evaluador, el registro aparecerá aquí.</p>
-          <a href="index.html" class="btn-ir-evaluador">Ir al evaluador</a>
-        </div>
-
-        <!-- Lista de lecturas -->
-        <section class="lista-lecturas" id="lista-lecturas" aria-label="Historial de lecturas"></section>
-
-      </main>
-    </div>
-
-    <!-- ── MODAL DE DETALLE ── -->
-    <div class="modal-overlay oculto" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
-      <div class="modal-card" id="modal-card">
-        <button class="modal-cerrar" id="modal-cerrar" aria-label="Cerrar detalle">✕</button>
-
-        <div class="modal-encabezado">
-          <div class="modal-semaforo" id="modal-semaforo"></div>
-          <div>
-            <h2 class="modal-titulo" id="modal-titulo">Detalle de la Evaluación</h2>
-            <p class="modal-fecha" id="modal-fecha"></p>
-          </div>
-        </div>
-
-        <div class="modal-grid">
-          <!-- Columna izquierda: datos del alumno -->
-          <section class="modal-seccion" aria-labelledby="titulo-alumno">
-            <h3 class="modal-seccion-titulo" id="titulo-alumno">👤 Datos del Estudiante</h3>
-            <dl class="modal-dl">
-              <dt>Nombre</dt>       <dd id="m-nombre">—</dd>
-              <dt>Apellido</dt>     <dd id="m-apellido">—</dd>
-              <dt>Nivel</dt>        <dd id="m-nivel">—</dd>
-              <dt>Ciclo</dt>        <dd id="m-ciclo">—</dd>
-              <dt>Año / Grado</dt>  <dd id="m-año">—</dd>
-              <dt>División</dt>     <dd id="m-division">—</dd>
-            </dl>
-          </section>
-
-          <!-- Columna derecha: resultados -->
-          <section class="modal-seccion" aria-labelledby="titulo-resultado">
-            <h3 class="modal-seccion-titulo" id="titulo-resultado">📊 Resultado de la Lectura</h3>
-            <dl class="modal-dl">
-              <dt>PPM</dt>              <dd id="m-ppm">—</dd>
-              <dt>Semáforo</dt>         <dd id="m-color">—</dd>
-              <dt>Tiempo</dt>           <dd id="m-tiempo">—</dd>
-              <dt>Palabras</dt>         <dd id="m-palabras">—</dd>
-              <dt>Pausas</dt>           <dd id="m-pausas">—</dd>
-              <dt>Prosodia</dt>         <dd id="m-prosodia">—</dd>
-            </dl>
-          </section>
-        </div>
-
-        <!-- Texto transcrito -->
-        <section class="modal-seccion modal-texto" aria-labelledby="titulo-texto">
-          <h3 class="modal-seccion-titulo" id="titulo-texto">📝 Texto Transcrito</h3>
-          <div class="texto-transcrito-box" id="m-texto"></div>
-        </section>
-
-        <!-- Devolución / Feedback -->
-        <section class="modal-seccion modal-feedback" id="modal-feedback-seccion" aria-labelledby="titulo-feedback">
-          <h3 class="modal-seccion-titulo" id="titulo-feedback">💡 Devolución</h3>
-          <p class="feedback-texto" id="m-feedback"></p>
-        </section>
-
       </div>
+      <button id="btn-cerrar-sesion" class="btn-cerrar-sesion" type="button">
+        Cerrar Sesión
+      </button>
+    </header>
+
+    <!-- ── ESTADÍSTICAS RÁPIDAS ── -->
+    <section class="stats-row" aria-label="Estadísticas rápidas">
+      <div class="stat-card" id="stat-total">
+        <span class="stat-numero" id="stat-total-num">—</span>
+        <span class="stat-label">Evaluaciones</span>
+      </div>
+      <div class="stat-card stat-verde" id="stat-verdes">
+        <span class="stat-numero" id="stat-verde-num">—</span>
+        <span class="stat-label">🟢 Verde</span>
+      </div>
+      <div class="stat-card stat-amarillo" id="stat-amarillos">
+        <span class="stat-numero" id="stat-amarillo-num">—</span>
+        <span class="stat-label">🟡 Amarillo</span>
+      </div>
+      <div class="stat-card stat-rojo" id="stat-rojos">
+        <span class="stat-numero" id="stat-rojo-num">—</span>
+        <span class="stat-label">🔴 Rojo</span>
+      </div>
+    </section>
+
+    <!-- ── FILTROS ── -->
+    <section class="filtros-bar" aria-label="Filtros del historial">
+      <div class="filtro-grupo">
+        <label for="filtro-color">Color del semáforo:</label>
+        <select id="filtro-color">
+          <option value="">Todos</option>
+          <option value="verde">🟢 Verde</option>
+          <option value="amarillo">🟡 Amarillo</option>
+          <option value="rojo">🔴 Rojo</option>
+        </select>
+      </div>
+      <div class="filtro-grupo">
+        <label for="filtro-nivel">Nivel:</label>
+        <select id="filtro-nivel">
+          <option value="">Todos</option>
+          <option value="Primario">Primario</option>
+          <option value="Secundario">Secundario</option>
+        </select>
+      </div>
+      <div class="filtro-grupo busqueda-grupo">
+        <label for="filtro-busqueda">Buscar estudiante:</label>
+        <input type="search" id="filtro-busqueda" placeholder="Nombre o apellido..." autocomplete="off" />
+      </div>
+    </section>
+
+    <!-- ── ÁREA PRINCIPAL: LISTA + DETALLE ── -->
+    <main class="panel-main" id="panel-main">
+
+      <!-- Estado de carga -->
+      <div class="estado-carga" id="estado-carga" role="status" aria-live="polite">
+        <div class="spinner" aria-hidden="true"></div>
+        <p>Cargando historial...</p>
+      </div>
+
+      <!-- Estado vacío -->
+      <div class="estado-vacio oculto" id="estado-vacio" role="status">
+        <div class="vacio-icono" aria-hidden="true">🚀</div>
+        <p class="vacio-titulo">¡Aún no hay evaluaciones!</p>
+        <p class="vacio-desc">Cuando evalúes a un estudiante en el evaluador, el registro aparecerá aquí.</p>
+        <a href="index.html" class="btn-ir-evaluador">Ir al evaluador</a>
+      </div>
+
+      <!-- Lista de lecturas -->
+      <section class="lista-lecturas" id="lista-lecturas" aria-label="Historial de lecturas"></section>
+
+    </main>
+  </div>
+
+  <!-- ── MODAL DE DETALLE ── -->
+  <div class="modal-overlay oculto" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
+    <div class="modal-card" id="modal-card">
+      <button class="modal-cerrar" id="modal-cerrar" aria-label="Cerrar detalle">✕</button>
+
+      <div class="modal-encabezado">
+        <div class="modal-semaforo" id="modal-semaforo"></div>
+        <div>
+          <h2 class="modal-titulo" id="modal-titulo">Detalle de la Evaluación</h2>
+          <p class="modal-fecha" id="modal-fecha"></p>
+        </div>
+      </div>
+
+      <div class="modal-grid">
+        <!-- Columna izquierda: datos del alumno -->
+        <section class="modal-seccion" aria-labelledby="titulo-alumno">
+          <h3 class="modal-seccion-titulo" id="titulo-alumno">👤 Datos del Estudiante</h3>
+          <dl class="modal-dl">
+            <dt>Nombre</dt>
+            <dd id="m-nombre">—</dd>
+            <dt>Apellido</dt>
+            <dd id="m-apellido">—</dd>
+            <dt>Nivel</dt>
+            <dd id="m-nivel">—</dd>
+            <dt>Ciclo</dt>
+            <dd id="m-ciclo">—</dd>
+            <dt>Año / Grado</dt>
+            <dd id="m-año">—</dd>
+            <dt>División</dt>
+            <dd id="m-division">—</dd>
+          </dl>
+        </section>
+
+        <!-- Columna derecha: resultados -->
+        <section class="modal-seccion" aria-labelledby="titulo-resultado">
+          <h3 class="modal-seccion-titulo" id="titulo-resultado">📊 Resultado de la Lectura</h3>
+          <dl class="modal-dl">
+            <dt>PPM</dt>
+            <dd id="m-ppm">—</dd>
+            <dt>Semáforo</dt>
+            <dd id="m-color">—</dd>
+            <dt>Tiempo</dt>
+            <dd id="m-tiempo">—</dd>
+            <dt>Palabras</dt>
+            <dd id="m-palabras">—</dd>
+            <dt>Pausas</dt>
+            <dd id="m-pausas">—</dd>
+            <dt>Prosodia</dt>
+            <dd id="m-prosodia">—</dd>
+          </dl>
+        </section>
+      </div>
+
+      <!-- Texto transcrito -->
+      <section class="modal-seccion modal-texto" aria-labelledby="titulo-texto">
+        <h3 class="modal-seccion-titulo" id="titulo-texto">📝 Texto Transcrito</h3>
+        <div class="texto-transcrito-box" id="m-texto"></div>
+      </section>
+
+      <!-- Devolución / Feedback -->
+      <section class="modal-seccion modal-feedback" id="modal-feedback-seccion" aria-labelledby="titulo-feedback">
+        <h3 class="modal-seccion-titulo" id="titulo-feedback">💡 Devolución</h3>
+        <p class="feedback-texto" id="m-feedback"></p>
+      </section>
+
     </div>
+  </div>
 
-    <!-- Footer de marca -->
-    <footer class="app-footer">
-      <span class="footer-desarrollador">via</span>
-      <img src="./recursos/logo2b.png" alt="Moon Solution" class="footer-logo" />
-    </footer>
+  <!-- Footer de marca -->
+  <footer class="app-footer">
+    <span class="footer-desarrollador">via</span>
+    <img src="./recursos/logo2b.png" alt="Moon Solution" class="footer-logo" />
+  </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="app.js"></script>
-    <script src="panel.js"></script>
-  </body>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="app.js"></script>
+  <script src="panel.js"></script>
+</body>
+
 </html>

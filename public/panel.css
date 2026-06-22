@@ -82,17 +82,17 @@
   gap: 0.3rem;
   border: 1px solid rgba(34, 58, 109, 0.14);
   border-radius: 999px;
-  padding: 0.52rem 0.9rem;
+  padding: 0.56rem 1rem;    /* Padding más generoso */
   background: rgba(255, 255, 255, 0.9);
   color: #2a4a7f;
   font-family: inherit;
-  font-size: 0.88rem;
+  font-size: 0.95rem;       /* Más grande que antes (era 0.88rem) */
   font-weight: 600;
   text-decoration: none;
   box-shadow: 0 6px 16px rgba(34, 58, 109, 0.1);
   transition: transform 0.15s ease, background 0.2s ease;
   white-space: nowrap;
-  min-height: 40px;
+  min-height: 42px;
 }
 
 .btn-volver:hover {
@@ -171,8 +171,9 @@
 }
 
 .filtro-grupo label {
-  font-size: 0.82rem;
+  font-size: 0.95rem;  /* Subimos de 0.82 a 0.95 para que se lean bien en cualquier monitor */
   color: #3a5981;
+  font-weight: 600;    /* Semi-negrita para que resalten más */
   margin-bottom: 0;
 }
 
@@ -499,14 +500,14 @@
 .modal-dl dt {
   font-weight: 600;
   color: #3a5981;
-  font-size: clamp(0.8rem, 2vw, 0.87rem);
+  font-size: clamp(0.85rem, 2vw, 0.95rem); /* Más grande en desktop */
   white-space: nowrap;
 }
 
 .modal-dl dd {
   margin: 0;
   color: #1d3557;
-  font-size: clamp(0.85rem, 2vw, 0.92rem);
+  font-size: clamp(0.88rem, 2vw, 1rem);    /* Más grande en desktop */
   word-break: break-word;
 }
 
@@ -515,9 +516,9 @@
   background: #f8fbff;
   border: 1px dashed #c8d7ef;
   border-radius: 10px;
-  padding: 0.7rem 0.85rem;
+  padding: 0.8rem 0.9rem;   /* Un poco más de padding */
   color: #304d73;
-  font-size: clamp(0.85rem, 2vw, 0.92rem);
+  font-size: clamp(0.88rem, 2vw, 1rem);  /* Subimos a 1rem en desktop */
   line-height: 1.55;
   max-height: 160px;
   overflow-y: auto;
@@ -529,7 +530,7 @@
 .feedback-texto {
   margin: 0;
   color: #1a4f5e;
-  font-size: clamp(0.88rem, 2vw, 0.95rem);
+  font-size: clamp(0.92rem, 2vw, 1rem); /* Subimos a 1rem en desktop */
   line-height: 1.5;
 }
 
