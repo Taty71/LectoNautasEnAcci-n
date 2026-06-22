@@ -1184,4 +1184,93 @@ textarea:focus {
 }
 
 
+/* ══════════════════════════════════════════════════
+   BARRAS DE PUNTAJE — Azure AI Speech
+   ══════════════════════════════════════════════════ */
 
+/* Contenedor general de las tres barras */
+.barras-azure {
+  margin: 1.4rem auto 0.5rem;
+  max-width: 400px;
+  width: 100%;
+  padding: 1rem 1.25rem 1.1rem;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(8px);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 4px 16px rgba(39, 125, 161, 0.12);
+}
+
+/* Título "✨ Análisis de IA" */
+.barras-azure-titulo {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: #496389;
+  text-align: center;
+  margin: 0 0 0.9rem;
+  opacity: 0.85;
+}
+
+/* Cada fila (nombre + valor + barra) */
+.barra-metrica {
+  margin-bottom: 0.85rem;
+}
+
+.barra-metrica:last-child {
+  margin-bottom: 0;
+}
+
+/* Fila de etiqueta: nombre a la izq, valor a la der */
+.barra-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.3rem;
+}
+
+.barra-nombre {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #1d3557;
+}
+
+.barra-valor {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #496389;
+}
+
+/* Fondo gris de la barra */
+.barra-fondo {
+  height: 11px;
+  background: rgba(0, 0, 0, 0.09);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+/* Relleno animado — parte desde 0% hasta el puntaje */
+.barra-relleno {
+  height: 100%;
+  border-radius: 6px;
+  width: 0%;
+  /* Animación suave estilo "resorte" */
+  transition: width 1.3s cubic-bezier(0.22, 1, 0.36, 1);
+  /* Color por defecto (antes de asignar el score) */
+  background: linear-gradient(90deg, #667eea, #764ba2);
+}
+
+/* ── Colores dinámicos según puntaje ── */
+/* Verde ≥ 80 */
+.barra-relleno.score-verde {
+  background: linear-gradient(90deg, #11998e, #38ef7d) !important;
+}
+/* Amarillo 60–79 */
+.barra-relleno.score-amarillo {
+  background: linear-gradient(90deg, #f09819, #edde5d) !important;
+}
+/* Rojo < 60 */
+.barra-relleno.score-rojo {
+  background: linear-gradient(90deg, #cb2d3e, #ef473a) !important;
+}

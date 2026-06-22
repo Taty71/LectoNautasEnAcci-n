@@ -30,7 +30,11 @@ router.post('/', verificarToken, permitirRoles('Docente', 'Administrador'), asyn
             palabrasContadas,
             tiempoEmpleadoSegundos,
             prosodia,
-            pausasDetectadas
+            pausasDetectadas,
+            // Métricas de Azure AI Speech (opcionales: pueden ser null si Azure no estuvo disponible)
+            fluencyScore,
+            accuracyScore,
+            prosodyScore
         } = req.body;
 
         // Extraemos nivel y ciclo desde el sub-objeto "estudiante" del body
@@ -88,11 +92,22 @@ router.post('/', verificarToken, permitirRoles('Docente', 'Administrador'), asyn
             colorSemaforo,
             prosodia:               prosodia || undefined,
             pausasDetectadas:       pausasDetectadas !== undefined ? Number(pausasDetectadas) : undefined,
+            // Guardar métricas de Azure solo si vinieron en el request y son números válidos
+            fluencyScore:  (fluencyScore  != null && !isNaN(fluencyScore))  ? Number(fluencyScore)  : undefined,
+            accuracyScore: (accuracyScore != null && !isNaN(accuracyScore)) ? Number(accuracyScore) : undefined,
+            prosodyScore:  (prosodyScore  != null && !isNaN(prosodyScore))  ? Number(prosodyScore)  : undefined,
             feedback:               feedbackObj?.mensaje || undefined
         });
         await nuevaLectura.save();
 
-        res.json({ success: true, ppm, color: colorSemaforo, nivel, ciclo, umbrales, ...feedbackObj });
+        // Devolvemos las métricas de Azure junto con el resultado del semáforo
+        // para que el frontend pueda mostrar las barras sin otro fetch.
+        res.json({
+            success: true, ppm, color: colorSemaforo, nivel, ciclo, umbrales, ...feedbackObj,
+            fluencyScore:  nuevaLectura.fluencyScore  ?? null,
+            accuracyScore: nuevaLectura.accuracyScore ?? null,
+            prosodyScore:  nuevaLectura.prosodyScore  ?? null
+        });
     } catch (error) {
         console.error('Error al procesar la lectura:', error);
         res.status(500).json({ success: false, error: 'Error interno al procesar la lectura.' });

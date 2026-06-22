@@ -257,6 +257,11 @@ function abrirModal(lectura) {
   document.getElementById('m-pausas').textContent    = lectura.pausasDetectadas !== undefined ? lectura.pausasDetectadas : '—';
   document.getElementById('m-prosodia').textContent  = lectura.prosodia || '—';
 
+  // Métricas de Azure AI Speech — se muestran "—" en registros anteriores a la integración
+  document.getElementById('m-fluidez').textContent      = (lectura.fluencyScore  != null) ? `${lectura.fluencyScore}/100`  : '—';
+  document.getElementById('m-precision').textContent    = (lectura.accuracyScore != null) ? `${lectura.accuracyScore}/100` : '—';
+  document.getElementById('m-prosodia-ia').textContent  = (lectura.prosodyScore  != null) ? `${lectura.prosodyScore}/100`  : '—';
+
   // Texto transcrito
   const textoBox = document.getElementById('m-texto');
   textoBox.textContent = lectura.textoTranscrito?.trim() || 'Sin transcripción registrada.';

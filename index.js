@@ -90,8 +90,9 @@ mongoose.connect(process.env.MONGO_URI)
 // ── 7. RUTAS ──────────────────────────────────────────────────────────────────
 // Aplicamos el rate limiting solo a las rutas de autenticación (login y registro),
 // que son las que necesitan protección contra fuerza bruta.
-app.use('/api/auth',     limiteAuth, require('./routes/authRoutes'));
-app.use('/api/lecturas',             require('./routes/lecturaRoutes'));
+app.use('/api/auth',         limiteAuth, require('./routes/authRoutes'));
+app.use('/api/speech-token',             require('./routes/speechTokenRoute'));
+app.use('/api/lecturas',                 require('./routes/lecturaRoutes'));
 
 // ── RUTA TEMPORAL DE DESARROLLO (Recorte de Logos en Cliente) ─────────────────
 const fs = require('fs');

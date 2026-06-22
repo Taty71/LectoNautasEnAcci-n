@@ -30,6 +30,11 @@ const lecturaSchema = new mongoose.Schema({
     colorSemaforo:         { type: String, enum: ['rojo', 'amarillo', 'verde'] },
     prosodia:              { type: String },
     pausasDetectadas:      { type: Number },
+    // ── Métricas de Azure AI Speech (Pronunciation Assessment) ────────────────
+    // Puntaje 0–100. null/undefined = registro anterior a la integración con Azure.
+    fluencyScore:          { type: Number, min: 0, max: 100 },  // Fluidez de lectura
+    accuracyScore:         { type: Number, min: 0, max: 100 },  // Precisión en la pronunciación
+    prosodyScore:          { type: Number, min: 0, max: 100 },  // Prosodia y entonación
     feedback:              { type: String },   // Guardamos el mensaje de devolución
     fecha:                 { type: Date, default: Date.now }
 }, {

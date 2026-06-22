@@ -238,11 +238,46 @@
           <div class="luz luz-verde" id="luz-verde"></div>
         </div>
         <div class="mensaje-contenedor">
-          <div id="emoji-gigante"></div>
-          <h2 id="mensaje-resultado"></h2>
-          <p id="detalle-ppm" class="detalle-ppm"></p>
-          <p id="observacion-prosodia" class="observacion-prosodia oculto"></p>
-        </div>
+        <div id="emoji-gigante"></div>
+        <h2 id="mensaje-resultado"></h2>
+        <p id="detalle-ppm" class="detalle-ppm"></p>
+        <p id="observacion-prosodia" class="observacion-prosodia oculto"></p>
+
+        <!-- BARRAS DE PUNTAJE: se muestran cuando Azure devuelve métricas -->
+        <div id="barras-azure" class="barras-azure oculto" aria-label="Métricas de evaluación de IA">
+          <p class="barras-azure-titulo">✨ Análisis de IA</p>
+
+          <div class="barra-metrica">
+            <div class="barra-label">
+              <span class="barra-nombre">🌊 Fluidez</span>
+              <span class="barra-valor" id="valor-fluidez">—</span>
+            </div>
+            <div class="barra-fondo" role="progressbar" aria-labelledby="valor-fluidez">
+              <div class="barra-relleno fluidez" id="barra-fluidez"></div>
+            </div>
+          </div>
+
+          <div class="barra-metrica">
+            <div class="barra-label">
+              <span class="barra-nombre">🎯 Precisión</span>
+              <span class="barra-valor" id="valor-precision">—</span>
+            </div>
+            <div class="barra-fondo" role="progressbar" aria-labelledby="valor-precision">
+              <div class="barra-relleno precision" id="barra-precision"></div>
+            </div>
+          </div>
+
+          <div class="barra-metrica">
+            <div class="barra-label">
+              <span class="barra-nombre">🎵 Prosodia</span>
+              <span class="barra-valor" id="valor-prosodia">—</span>
+            </div>
+            <div class="barra-fondo" role="progressbar" aria-labelledby="valor-prosodia">
+              <div class="barra-relleno prosodia" id="barra-prosodia"></div>
+            </div>
+          </div>
+        </div><!-- /barras-azure -->
+      </div>
         <button id="btn-nuevo" class="btn-nuevo">
           Comenzar nueva evaluación 🔄
         </button>
@@ -256,7 +291,9 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/distrib/confetti.browser.min.js"></script>
+    <!-- SDK de Azure AI Speech: expone window.SpeechSDK globalmente -->
+    <script src="https://cdn.jsdelivr.net/npm/microsoft-cognitiveservices-speech-sdk@1.42.0/distrib/browser/microsoft.cognitiveservices.speech.sdk.bundle.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
