@@ -725,9 +725,10 @@ function initMainPage() {
         restaurarBtnGuardar();
       }
     } catch (error) {
+      console.error("Error exacto capturado en btnGuardar:", error);
       Swal.fire({
-        title:              'Sin conexión 🔌',
-        text:               'No se pudo conectar con el servidor. Verificá la conexión.',
+        title:              'Error de Conexión 🔌',
+        text:               `Hubo un problema: ${error.message}. Por favor, avisame qué dice este error.`,
         icon:               'error',
         confirmButtonColor: '#4e89ae',
       });
