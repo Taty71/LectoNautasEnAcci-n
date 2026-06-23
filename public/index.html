@@ -189,41 +189,6 @@
             Palabras a registrar: <strong id="palabrasFinales">0</strong>
           </div>
 
-          <!-- EVALUACIÓN DE PROSODIA -->
-          <div class="prosodia-grupo">
-            <div class="seccion-titulo">
-              🎵 Evaluación de Ritmo y Prosodia (Docente)
-            </div>
-            <label class="prosodia-opcion">
-              <input
-                type="radio"
-                name="prosodia"
-                value="Dinámica y Expresiva"
-              />
-              <span class="prosodia-label">Dinámica y Expresiva</span>
-              <span class="prosodia-desc"
-                >(Respeta la puntuación y entonación)</span
-              >
-            </label>
-            <label class="prosodia-opcion">
-              <input type="radio" name="prosodia" value="Plana / Apurada" />
-              <span class="prosodia-label">Plana / Apurada</span>
-              <span class="prosodia-desc"
-                >(Lee velozmente pero ignora signos de puntuación)</span
-              >
-            </label>
-            <label class="prosodia-opcion">
-              <input
-                type="radio"
-                name="prosodia"
-                value="Muy Pausada / Silabeada"
-              />
-              <span class="prosodia-label">Muy Pausada / Silabeada</span>
-              <span class="prosodia-desc"
-                >(Le cuesta conectar palabras y fluir)</span
-              >
-            </label>
-          </div>
           <button type="button" id="btn-guardar" class="btn-guardar">
             💾 Guardar Registro
           </button>
@@ -245,7 +210,7 @@
 
         <!-- BARRAS DE PUNTAJE: se muestran cuando Azure devuelve métricas -->
         <div id="barras-azure" class="barras-azure oculto" aria-label="Métricas de evaluación de IA">
-          <p class="barras-azure-titulo">✨ Análisis de IA</p>
+          <p class="barras-azure-titulo">✨ Análisis de Lectura</p>
 
           <div class="barra-metrica">
             <div class="barra-label">
@@ -255,6 +220,7 @@
             <div class="barra-fondo" role="progressbar" aria-labelledby="valor-fluidez">
               <div class="barra-relleno fluidez" id="barra-fluidez"></div>
             </div>
+            <p class="metrica-desc">Mide la continuidad de la lectura, detectando pausas excesivas o silencios prolongados en comparación con un hablante fluido.</p>
           </div>
 
           <div class="barra-metrica">
@@ -265,6 +231,7 @@
             <div class="barra-fondo" role="progressbar" aria-labelledby="valor-precision">
               <div class="barra-relleno precision" id="barra-precision"></div>
             </div>
+            <p class="metrica-desc">Evalúa la pronunciación correcta de las palabras y si hubo omisiones, inserciones o fallos de articulación.</p>
           </div>
 
           <div class="barra-metrica">
@@ -275,6 +242,7 @@
             <div class="barra-fondo" role="progressbar" aria-labelledby="valor-prosodia">
               <div class="barra-relleno prosodia" id="barra-prosodia"></div>
             </div>
+            <p class="metrica-desc">Analiza la entonación, el ritmo y si la voz refleja correctamente los signos de interrogación y exclamación.</p>
           </div>
         </div><!-- /barras-azure -->
       </div>

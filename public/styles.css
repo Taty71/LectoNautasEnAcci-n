@@ -1242,6 +1242,14 @@ textarea:focus {
   color: #496389;
 }
 
+/* Descripción de cada métrica */
+.metrica-desc {
+  font-size: 0.75rem;
+  color: #6c84a3;
+  margin: 0.35rem 0 0 0;
+  line-height: 1.3;
+}
+
 /* Fondo gris de la barra */
 .barra-fondo {
   height: 11px;

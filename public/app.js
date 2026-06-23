@@ -264,13 +264,13 @@ function initMainPage() {
       ]),
       grabando: renderLineasGuia([
         '🎙️ ¡Estoy escuchando!',
-        'La IA de Azure está analizando la lectura.',
+        'Se está analizando la lectura.',
         'Cuando el estudiante termine, presioná 🛑 <strong>Terminar Antes</strong>.',
         'El tiempo máximo es de 60 segundos.',
       ]),
       revision: renderLineasGuia([
         '✏️ Revisá el texto transcrito.',
-        'Si la IA cometió errores, podés corregirlos.',
+        'Si se cometió errores, podés corregirlos.',
         'Después seleccioná la evaluación de prosodia.',
         'Por último, presioná <strong>💾 Guardar Registro</strong>.',
       ]),
@@ -674,16 +674,7 @@ function initMainPage() {
       return;
     }
 
-    const prosodiaSeleccionada = document.querySelector('input[name="prosodia"]:checked');
-    if (!prosodiaSeleccionada) {
-      Swal.fire({
-        title:              'Falta la evaluación de prosodia',
-        text:               'Por favor seleccioná una opción de Ritmo y Prosodia antes de guardar.',
-        icon:               'warning',
-        confirmButtonColor: '#4e89ae',
-      });
-      return;
-    }
+    // Eliminada la validación manual de prosodia. Ahora usamos métricas de IA.
 
     // Construimos el payload completo: datos del estudiante + resultado + métricas de Azure.
     const payload = {
@@ -698,7 +689,6 @@ function initMainPage() {
       textoTranscrito:        textoFinal,
       palabrasContadas,
       tiempoEmpleadoSegundos: tiempoEmpleado,
-      prosodia:               prosodiaSeleccionada.value,
       pausasDetectadas,
       // Métricas de Azure AI Speech (null si Azure no pudo calcularlas)
       fluencyScore:  metricasAzureFinales?.fluencyScore  ?? null,
