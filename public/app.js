@@ -401,8 +401,11 @@ function initMainPage() {
     );
 
     // Habilitar evaluación de prosodia: entonación, ritmo y acento (SDK >= 1.35)
+    // IMPORTANTE: es un método, no una propiedad — se debe llamar con ()
     try {
-      pronunciacionConfig.enableProsodyAssessment = true;
+      if (typeof pronunciacionConfig.enableProsodyAssessment === 'function') {
+        pronunciacionConfig.enableProsodyAssessment();
+      }
     } catch (_) {
       // Si el SDK no soporta prosodia, continuamos sin esa métrica
     }
