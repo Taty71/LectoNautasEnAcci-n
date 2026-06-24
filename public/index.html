@@ -19,7 +19,9 @@
 
     <!-- Barra de acciones superior: Panel del Docente y Cerrar Sesión -->
     <div class="barra-acciones">
-      <a href="panel.html" id="btn-ir-panel" class="btn-panel">📋 Mi Historial</a>
+      <a href="panel.html" id="btn-ir-panel" class="btn-panel"
+        >📋 Mi Historial</a
+      >
       <button id="btn-cerrar-sesion" class="btn-cerrar-sesion" type="button">
         Cerrar Sesión
       </button>
@@ -32,7 +34,12 @@
     </div>
 
     <!-- GUÍA: Cosmo el astronauta asistente -->
-    <aside id="lectonauta-guia" class="lectonauta-guia" aria-live="polite" aria-label="Guía interactiva Lectonauta">
+    <aside
+      id="lectonauta-guia"
+      class="lectonauta-guia"
+      aria-live="polite"
+      aria-label="Guía interactiva Lectonauta"
+    >
       <div class="guia-avatar" aria-hidden="true">
         <img src="./recursos/astronauta.png" alt="Cosmo" />
       </div>
@@ -54,7 +61,11 @@
       <form id="lecturaForm">
         <!-- SECCIÓN: Datos del Estudiante -->
         <div class="seccion-titulo">
-          <img src="./recursos/astronauta.png" alt="Cosmo" class="seccion-icono" />
+          <img
+            src="./recursos/astronauta.png"
+            alt="Cosmo"
+            class="seccion-icono"
+          />
           Datos del Estudiante
         </div>
 
@@ -203,49 +214,77 @@
           <div class="luz luz-verde" id="luz-verde"></div>
         </div>
         <div class="mensaje-contenedor">
-        <div id="emoji-gigante"></div>
-        <h2 id="mensaje-resultado"></h2>
-        <p id="detalle-ppm" class="detalle-ppm"></p>
-        <p id="observacion-prosodia" class="observacion-prosodia oculto"></p>
+          <div id="emoji-gigante"></div>
+          <h2 id="mensaje-resultado"></h2>
+          <p id="detalle-ppm" class="detalle-ppm"></p>
+          <p id="observacion-prosodia" class="observacion-prosodia oculto"></p>
 
-        <!-- BARRAS DE PUNTAJE: se muestran cuando Azure devuelve métricas -->
-        <div id="barras-azure" class="barras-azure oculto" aria-label="Métricas de evaluación de IA">
-          <p class="barras-azure-titulo">✨ Análisis de Lectura</p>
+          <!-- BARRAS DE PUNTAJE: se muestran cuando Azure devuelve métricas -->
+          <div
+            id="barras-azure"
+            class="barras-azure oculto"
+            aria-label="Métricas de evaluación de IA"
+          >
+            <p class="barras-azure-titulo">✨ Análisis de Lectura</p>
 
-          <div class="barra-metrica">
-            <div class="barra-label">
-              <span class="barra-nombre">🌊 Fluidez</span>
-              <span class="barra-valor" id="valor-fluidez">—</span>
+            <div class="barra-metrica">
+              <div class="barra-label">
+                <span class="barra-nombre">🌊 Fluidez</span>
+                <span class="barra-valor" id="valor-fluidez">—</span>
+              </div>
+              <div
+                class="barra-fondo"
+                role="progressbar"
+                aria-labelledby="valor-fluidez"
+              >
+                <div class="barra-relleno fluidez" id="barra-fluidez"></div>
+              </div>
+              <p class="metrica-desc">
+                Mide la continuidad de la lectura, detectando pausas excesivas o
+                silencios prolongados en comparación con un hablante fluido.
+              </p>
             </div>
-            <div class="barra-fondo" role="progressbar" aria-labelledby="valor-fluidez">
-              <div class="barra-relleno fluidez" id="barra-fluidez"></div>
+
+            <div class="barra-metrica">
+              <div class="barra-label">
+                <span class="barra-nombre"
+                  >🎯 Precisión - Pronunciación de Palabras</span
+                >
+                <span class="barra-valor" id="valor-precision">—</span>
+              </div>
+              <div
+                class="barra-fondo"
+                role="progressbar"
+                aria-labelledby="valor-precision"
+              >
+                <div class="barra-relleno precision" id="barra-precision"></div>
+              </div>
+              <p class="metrica-desc">
+                Evalúa la pronunciación correcta de las palabras y si hubo
+                omisiones, inserciones o fallos de articulación.
+              </p>
             </div>
-            <p class="metrica-desc">Mide la continuidad de la lectura, detectando pausas excesivas o silencios prolongados en comparación con un hablante fluido.</p>
+
+            <div class="barra-metrica">
+              <div class="barra-label">
+                <span class="barra-nombre">🎵 Prosodia</span>
+                <span class="barra-valor" id="valor-prosodia">—</span>
+              </div>
+              <div
+                class="barra-fondo"
+                role="progressbar"
+                aria-labelledby="valor-prosodia"
+              >
+                <div class="barra-relleno prosodia" id="barra-prosodia"></div>
+              </div>
+              <p class="metrica-desc">
+                Analiza la entonación, el ritmo y si la voz refleja
+                correctamente los signos de interrogación y exclamación.
+              </p>
+            </div>
           </div>
-
-          <div class="barra-metrica">
-            <div class="barra-label">
-              <span class="barra-nombre">🎯 Precisión</span>
-              <span class="barra-valor" id="valor-precision">—</span>
-            </div>
-            <div class="barra-fondo" role="progressbar" aria-labelledby="valor-precision">
-              <div class="barra-relleno precision" id="barra-precision"></div>
-            </div>
-            <p class="metrica-desc">Evalúa la pronunciación correcta de las palabras y si hubo omisiones, inserciones o fallos de articulación.</p>
-          </div>
-
-          <div class="barra-metrica">
-            <div class="barra-label">
-              <span class="barra-nombre">🎵 Prosodia</span>
-              <span class="barra-valor" id="valor-prosodia">—</span>
-            </div>
-            <div class="barra-fondo" role="progressbar" aria-labelledby="valor-prosodia">
-              <div class="barra-relleno prosodia" id="barra-prosodia"></div>
-            </div>
-            <p class="metrica-desc">Analiza la entonación, el ritmo y si la voz refleja correctamente los signos de interrogación y exclamación.</p>
-          </div>
-        </div><!-- /barras-azure -->
-      </div>
+          <!-- /barras-azure -->
+        </div>
         <button id="btn-nuevo" class="btn-nuevo">
           Comenzar nueva evaluación 🔄
         </button>
@@ -255,7 +294,11 @@
     <!-- Footer de marca -->
     <footer class="app-footer">
       <span class="footer-desarrollador">via</span>
-      <img src="./recursos/logo2b.png" alt="Moon Solution" class="footer-logo" />
+      <img
+        src="./recursos/logo2b.png"
+        alt="Moon Solution"
+        class="footer-logo"
+      />
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

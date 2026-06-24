@@ -387,7 +387,9 @@ function initMainPage() {
     if (!SDK) throw new Error('El servicio de IA de voz no está disponible. Recargá la página.');
 
     const speechConfig = SDK.SpeechConfig.fromAuthorizationToken(token, region);
-    speechConfig.speechRecognitionLanguage = 'es-AR';
+    // Cambiamos a es-ES porque la evaluación sin texto de referencia (Unscripted) 
+    // actualmente está más soportada en es-ES que en es-AR.
+    speechConfig.speechRecognitionLanguage = 'es-ES';
 
     // Configuración de evaluación de pronunciación — Modo A: sin texto de referencia.
     // Azure igual mide fluidez y prosodia de la lectura libre.
@@ -400,7 +402,7 @@ function initMainPage() {
 
     // Habilitar evaluación de prosodia: entonación, ritmo y acento (SDK >= 1.35)
     try {
-      pronunciacionConfig.enableProsodyAssessment();
+      pronunciacionConfig.enableProsodyAssessment = true;
     } catch (_) {
       // Si el SDK no soporta prosodia, continuamos sin esa métrica
     }
