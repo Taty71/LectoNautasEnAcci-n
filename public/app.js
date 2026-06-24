@@ -269,10 +269,9 @@ function initMainPage() {
         'El tiempo máximo es de 60 segundos.',
       ]),
       revision: renderLineasGuia([
-        '✏️ Revisá el texto transcrito.',
-        'Si se cometió errores, podés corregirlos.',
-        'Después seleccioná la evaluación de prosodia.',
-        'Por último, presioná <strong>💾 Guardar Registro</strong>.',
+        '📄 Lectura registrada.',
+        'Podés leer el texto transcrito para verificar la puntuación.',
+        'Cuando estés listo, presioná <strong>💾 Guardar Registro</strong>.',
       ]),
     };
 
@@ -391,17 +390,22 @@ function initMainPage() {
     // actualmente está más soportada en es-ES que en es-AR.
     speechConfig.speechRecognitionLanguage = 'es-ES';
 
-    // Configuración de evaluación de pronunciación — Modo A: sin texto de referencia.
-    // fromJSON con claves PascalCase (formato interno del SDK de Azure).
-    const pronunciacionConfig = SDK.PronunciationAssessmentConfig.fromJSON(
-      JSON.stringify({
-        ReferenceText:           '',
-        GradingSystem:           'HundredMark',
-        Granularity:             'Word',
-        EnableMiscue:            false,
-        EnableProsodyAssessment: true,   // PascalCase: clave correcta del SDK interno
-      })
+    // Configuración de evaluación de pronunciación — Modo A: lectura libre (sin texto de referencia).
+    // Granularidad FullText: necesaria para que Azure calcule prosodyScore.
+    const pronunciacionConfig = new SDK.PronunciationAssessmentConfig(
+      '',
+      SDK.PronunciationAssessmentGradingSystem.HundredMark,
+      SDK.PronunciationAssessmentGranularity.FullText,
+      false
     );
+
+    // enableProsodyAssessment() es un método del SDK >= 1.35.
+    // Lo llamamos directamente; si el SDK no lo soporta, el catch silencia el error.
+    try {
+      pronunciacionConfig.enableProsodyAssessment();
+    } catch (_) {
+      // SDK antiguo: prosodia no disponible, continuamos igual
+    }
 
     const audioConfig = SDK.AudioConfig.fromDefaultMicrophoneInput();
     const recognizer  = new SDK.SpeechRecognizer(speechConfig, audioConfig);
