@@ -514,11 +514,38 @@ function initMainPage() {
         try {
           const pr = SDK.PronunciationAssessmentResult.fromResult(e.result);
           if (pr) {
-            // Solo acumulamos valores positivos (0 puede significar "no disponible")
+            // ── DEBUG: muestra en consola qué devuelve Azure exactamente ──
+            console.log('[Azure PR]', {
+              fluency:   pr.fluencyScore,
+              accuracy:  pr.accuracyScore,
+              prosody:   pr.prosodyScore,
+              completeness: pr.completenessScore,
+              pronScore: pr.pronScore,
+            });
+            // ── Intentar leer prosody desde JSON crudo si el campo del objeto es undefined ──
+            let prosodyRaw = pr.prosodyScore;
+            if ((prosodyRaw === undefined || prosodyRaw === null) ) {
+              try {
+                const rawJson = e.result.properties.getProperty(
+                  SDK.PropertyId.SpeechServiceResponse_JsonResult
+                );
+                if (rawJson) {
+                  const parsed = JSON.parse(rawJson);
+                  const nbest  = parsed?.NBest?.[0];
+                  prosodyRaw   = nbest?.PronunciationAssessment?.ProsodyScore
+                               ?? nbest?.PronunciationAssessment?.prosodyScore
+                               ?? null;
+                  console.log('[Azure raw prosody]', prosodyRaw, 'NBest[0]:', nbest?.PronunciationAssessment);
+                }
+              } catch (parseErr) {
+                console.warn('[Azure raw prosody error]', parseErr);
+              }
+            }
+
             if (pr.fluencyScore  > 0) _fluencyScores.push(pr.fluencyScore);
             if (pr.accuracyScore > 0) _accuracyScores.push(pr.accuracyScore);
-            if (pr.prosodyScore !== undefined && pr.prosodyScore > 0) {
-              _prosodyScores.push(pr.prosodyScore);
+            if (prosodyRaw !== undefined && prosodyRaw !== null && prosodyRaw > 0) {
+              _prosodyScores.push(prosodyRaw);
             }
           }
         } catch (_) {
