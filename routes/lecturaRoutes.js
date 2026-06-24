@@ -37,9 +37,10 @@ router.post('/', verificarToken, permitirRoles('Docente', 'Administrador'), asyn
             prosodyScore
         } = req.body;
 
-        // Extraemos nivel y ciclo desde el sub-objeto "estudiante" del body
-        const nivel = estudiante?.nivel;
-        const ciclo = estudiante?.ciclo;
+        // Extraemos nivel, ciclo y año_grado desde el sub-objeto "estudiante" del body
+        const nivel     = estudiante?.nivel;
+        const ciclo     = estudiante?.ciclo;
+        const añoGrado  = estudiante?.año_grado;
 
         if (!palabrasContadas || !tiempoEmpleadoSegundos || !nivel || !ciclo) {
             return res.status(400).json({
@@ -77,9 +78,9 @@ router.post('/', verificarToken, permitirRoles('Docente', 'Administrador'), asyn
         }
 
         const ppm           = calcularPPM(palabras, tiempo);
-        const colorSemaforo = determinarSemaforo(ppm, nivel, ciclo);
+        const colorSemaforo = determinarSemaforo(ppm, nivel, ciclo, añoGrado);
         const feedbackObj   = obtenerFeedback(colorSemaforo, prosodia);
-        const umbrales      = obtenerUmbralesPorNivelYCiclo(nivel, ciclo);
+        const umbrales      = obtenerUmbralesPorNivelYCiclo(nivel, ciclo, añoGrado);
 
         // Creamos el nuevo registro vinculando el id del docente autenticado (req.usuario.id)
         const nuevaLectura = new Lectura({
@@ -123,13 +124,14 @@ router.post('/evaluar', verificarToken, permitirRoles('Docente', 'Administrador'
     try {
         const {
             ppm: ppmFrontend,
-            nivel  = 'Primario',
-            ciclo  = 'Primario'
+            nivel     = 'Primario',
+            ciclo     = 'Primario',
+            año_grado = 1
         } = req.body;
 
-        const colorSemaforo = determinarSemaforo(Number(ppmFrontend), nivel, ciclo);
+        const colorSemaforo = determinarSemaforo(Number(ppmFrontend), nivel, ciclo, año_grado);
         const feedback      = obtenerFeedback(colorSemaforo);
-        const umbrales      = obtenerUmbralesPorNivelYCiclo(nivel, ciclo);
+        const umbrales      = obtenerUmbralesPorNivelYCiclo(nivel, ciclo, año_grado);
 
         const nuevaLectura = new Lectura({
             docenteId:              req.usuario.id,

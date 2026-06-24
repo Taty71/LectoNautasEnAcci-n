@@ -1,20 +1,27 @@
 /**
- * Umbrales pedagógicos de PPM según nivel y ciclo educativo.
- * Sistema educativo argentino — valores de referencia para docentes.
+ * Umbrales pedagógicos de PPM calibrados a la realidad escolar argentina.
  *
- * Estructura: { amarillo: N, verde: N }
+ * Primario: clave = año/grado (1–6).
+ * Secundario: clave = ciclo (Básico | Orientado | Técnico).
+ *
+ * Lógica de semáforo con los valores almacenados:
  *   ppm >= verde        → 'verde'
  *   ppm >= amarillo     → 'amarillo'
  *   ppm <  amarillo     → 'rojo'
  */
 const UMBRALES = {
     Primario: {
-        Primario: { amarillo: 60, verde: 86 }
+        1: { amarillo: 25,  verde: 41  },  // Verde: > 40 PPM
+        2: { amarillo: 40,  verde: 61  },  // Verde: > 60 PPM
+        3: { amarillo: 60,  verde: 76  },  // Verde: > 75 PPM
+        4: { amarillo: 70,  verde: 86  },  // Verde: > 85 PPM
+        5: { amarillo: 80,  verde: 96  },  // Verde: > 95 PPM
+        6: { amarillo: 90,  verde: 106 },  // Verde: > 105 PPM
     },
     Secundario: {
-        Básico:    { amarillo: 100, verde: 126 },
-        Orientado: { amarillo: 120, verde: 146 },
-        Técnico:   { amarillo: 120, verde: 146 }
+        Básico:    { amarillo: 100, verde: 126 },  // CBU 1°–3°: Verde > 125 PPM
+        Orientado: { amarillo: 115, verde: 141 },  // Orientado/Técnico 4°–7°: Verde > 140 PPM
+        Técnico:   { amarillo: 115, verde: 141 },
     }
 };
 
@@ -45,20 +52,16 @@ function calcularPPM(palabrasContadas, tiempoEmpleadoSegundos) {
 }
 
 /**
- * Determina el color del semáforo pedagógico según nivel y ciclo educativo.
+ * Determina el color del semáforo pedagógico según nivel, ciclo y año/grado.
  *
- * Reglas:
- *   - Primario               → rojo < 60  | amarillo 60–85  | verde > 85
- *   - Secundario Básico      → rojo < 100 | amarillo 100–125 | verde > 125
- *   - Secundario Orientado/Técnico → rojo < 120 | amarillo 120–145 | verde > 145
- *
- * @param {number} ppm   - PPM calculadas.
- * @param {string} nivel - 'Primario' | 'Secundario'
- * @param {string} ciclo - 'Primario' | 'Básico' | 'Orientado' | 'Técnico'
+ * @param {number} ppm
+ * @param {string} nivel     - 'Primario' | 'Secundario'
+ * @param {string} ciclo     - 'Primario' | 'Básico' | 'Orientado' | 'Técnico'
+ * @param {number} añoGrado  - Año o grado del estudiante (1–7)
  * @returns {'verde'|'amarillo'|'rojo'}
  */
-function determinarSemaforo(ppm, nivel, ciclo) {
-    const umbrales = obtenerUmbralesPorNivelYCiclo(nivel, ciclo);
+function determinarSemaforo(ppm, nivel, ciclo, añoGrado) {
+    const umbrales = obtenerUmbralesPorNivelYCiclo(nivel, ciclo, añoGrado);
 
     if (ppm >= umbrales.verde)    return 'verde';
     if (ppm >= umbrales.amarillo) return 'amarillo';
@@ -66,22 +69,31 @@ function determinarSemaforo(ppm, nivel, ciclo) {
 }
 
 /**
- * Obtiene los umbrales aplicados según nivel y ciclo.
+ * Obtiene los umbrales aplicados según nivel, ciclo y año/grado.
+ * - Primario: umbrales distintos por cada grado (1° a 6°).
+ * - Secundario: umbrales por ciclo (Básico, Orientado, Técnico).
+ *
  * @param {string} nivel
  * @param {string} ciclo
+ * @param {number} añoGrado
  * @returns {{ amarillo: number, verde: number, rojoMax: number, amarilloMax: number }}
  */
-function obtenerUmbralesPorNivelYCiclo(nivel, ciclo) {
-    const umbralesNivel = UMBRALES[nivel];
-    const umbrales = umbralesNivel
-        ? (umbralesNivel[ciclo] || Object.values(umbralesNivel)[0])
-        : UMBRALES.Primario.Primario;
+function obtenerUmbralesPorNivelYCiclo(nivel, ciclo, añoGrado) {
+    let base;
+    if (nivel === 'Primario') {
+        // Clampear grado entre 1 y 6 para evitar accesos fuera de rango
+        const grado = Math.min(Math.max(Number(añoGrado) || 1, 1), 6);
+        base = UMBRALES.Primario[grado] || UMBRALES.Primario[1];
+    } else {
+        const umbralesSecundario = UMBRALES.Secundario;
+        base = umbralesSecundario[ciclo] || umbralesSecundario.Básico;
+    }
 
     return {
-        amarillo: umbrales.amarillo,
-        verde: umbrales.verde,
-        rojoMax: umbrales.amarillo - 1,
-        amarilloMax: umbrales.verde - 1
+        amarillo:    base.amarillo,
+        verde:       base.verde,
+        rojoMax:     base.amarillo - 1,
+        amarilloMax: base.verde - 1,
     };
 }
 

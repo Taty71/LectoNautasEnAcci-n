@@ -392,23 +392,17 @@ function initMainPage() {
     speechConfig.speechRecognitionLanguage = 'es-ES';
 
     // Configuración de evaluación de pronunciación — Modo A: sin texto de referencia.
-    // Azure igual mide fluidez y prosodia de la lectura libre.
-    const pronunciacionConfig = new SDK.PronunciationAssessmentConfig(
-      '',    // Texto de referencia vacío → lectura libre
-      SDK.PronunciationAssessmentGradingSystem.HundredMark,
-      SDK.PronunciationAssessmentGranularity.Word,
-      false  // enableMiscue: false (requiere texto de referencia, no aplica aquí)
+    // Usamos fromJSON para activar enableProsodyAssessment de forma confiable
+    // en todas las versiones del SDK (más robusto que llamar al método por separado).
+    const pronunciacionConfig = SDK.PronunciationAssessmentConfig.fromJSON(
+      JSON.stringify({
+        referenceText:          '',
+        gradingSystem:          'HundredMark',
+        granularity:            'Word',
+        enableMiscue:           false,
+        enableProsodyAssessment: true,
+      })
     );
-
-    // Habilitar evaluación de prosodia: entonación, ritmo y acento (SDK >= 1.35)
-    // IMPORTANTE: es un método, no una propiedad — se debe llamar con ()
-    try {
-      if (typeof pronunciacionConfig.enableProsodyAssessment === 'function') {
-        pronunciacionConfig.enableProsodyAssessment();
-      }
-    } catch (_) {
-      // Si el SDK no soporta prosodia, continuamos sin esa métrica
-    }
 
     const audioConfig = SDK.AudioConfig.fromDefaultMicrophoneInput();
     const recognizer  = new SDK.SpeechRecognizer(speechConfig, audioConfig);
