@@ -392,15 +392,14 @@ function initMainPage() {
     speechConfig.speechRecognitionLanguage = 'es-ES';
 
     // Configuración de evaluación de pronunciación — Modo A: sin texto de referencia.
-    // Usamos fromJSON para activar enableProsodyAssessment de forma confiable
-    // en todas las versiones del SDK (más robusto que llamar al método por separado).
+    // fromJSON con claves PascalCase (formato interno del SDK de Azure).
     const pronunciacionConfig = SDK.PronunciationAssessmentConfig.fromJSON(
       JSON.stringify({
-        referenceText:          '',
-        gradingSystem:          'HundredMark',
-        granularity:            'Word',
-        enableMiscue:           false,
-        enableProsodyAssessment: true,
+        ReferenceText:           '',
+        GradingSystem:           'HundredMark',
+        Granularity:             'Word',
+        EnableMiscue:            false,
+        EnableProsodyAssessment: true,   // PascalCase: clave correcta del SDK interno
       })
     );
 
@@ -865,6 +864,9 @@ function initMainPage() {
   }
 
   function triggerConfetti() {
+    // Guard: el script CDN puede fallar al cargar en algunos entornos
+    if (typeof confetti === 'undefined') return;
+
     const duracion = 3 * 1000;
     const fin = Date.now() + duracion;
     (function frame() {
