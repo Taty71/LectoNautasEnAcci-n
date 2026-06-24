@@ -514,39 +514,22 @@ function initMainPage() {
         try {
           const pr = SDK.PronunciationAssessmentResult.fromResult(e.result);
           if (pr) {
-            // ── DEBUG: muestra en consola qué devuelve Azure exactamente ──
-            console.log('[Azure PR]', {
-              fluency:   pr.fluencyScore,
-              accuracy:  pr.accuracyScore,
-              prosody:   pr.prosodyScore,
-              completeness: pr.completenessScore,
-              pronScore: pr.pronScore,
-            });
-            // ── Intentar leer prosody desde JSON crudo si el campo del objeto es undefined ──
-            let prosodyRaw = pr.prosodyScore;
-            if ((prosodyRaw === undefined || prosodyRaw === null) ) {
-              try {
-                const rawJson = e.result.properties.getProperty(
-                  SDK.PropertyId.SpeechServiceResponse_JsonResult
-                );
-                if (rawJson) {
-                  const parsed = JSON.parse(rawJson);
-                  const nbest  = parsed?.NBest?.[0];
-                  prosodyRaw   = nbest?.PronunciationAssessment?.ProsodyScore
-                               ?? nbest?.PronunciationAssessment?.prosodyScore
-                               ?? null;
-                  console.log('[Azure raw prosody]', prosodyRaw, 'NBest[0]:', nbest?.PronunciationAssessment);
-                }
-              } catch (parseErr) {
-                console.warn('[Azure raw prosody error]', parseErr);
-              }
-            }
-
             if (pr.fluencyScore  > 0) _fluencyScores.push(pr.fluencyScore);
             if (pr.accuracyScore > 0) _accuracyScores.push(pr.accuracyScore);
-            if (prosodyRaw !== undefined && prosodyRaw !== null && prosodyRaw > 0) {
-              _prosodyScores.push(prosodyRaw);
-            }
+
+            // Azure no devuelve prosodyScore en es-ES modo libre.
+            // Usamos PronScore (puntaje general de pronunciación) del JSON crudo
+            // como métrica de calidad global de la lectura.
+            try {
+              const rawJson = e.result.properties.getProperty(
+                SDK.PropertyId.SpeechServiceResponse_JsonResult
+              );
+              if (rawJson) {
+                const nbest    = JSON.parse(rawJson)?.NBest?.[0];
+                const pronScore = nbest?.PronunciationAssessment?.PronScore;
+                if (pronScore > 0) _prosodyScores.push(Math.round(pronScore));
+              }
+            } catch (_) { /* JSON no disponible, omitir */ }
           }
         } catch (_) {
           // No interrumpir la grabación si falla la extracción de una métrica
