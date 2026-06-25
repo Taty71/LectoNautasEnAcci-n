@@ -815,9 +815,16 @@ function initMainPage() {
     }
 
     // ── Barras de puntaje de Azure AI ─────────────────────────────────────────
-    // Se muestran solo si Azure devolvió métricas (puede ser null si hubo problemas).
+    // Usar los valores ajustados que devuelve el backend (coherentes con el semáforo).
+    // Si el backend no los trajo (por error de red, etc.), caer a los locales.
     const barrasEl = document.getElementById('barras-azure');
-    const metricas = metricasAzureFinales;
+    const metricas = (result.fluencyScore != null || result.accuracyScore != null)
+      ? {
+          fluencyScore:  result.fluencyScore  ?? null,
+          accuracyScore: result.accuracyScore ?? null,
+          prosodyScore:  result.prosodyScore  ?? null,
+        }
+      : metricasAzureFinales;
 
     if (barrasEl && metricas &&
        (metricas.fluencyScore !== null || metricas.accuracyScore !== null)) {
