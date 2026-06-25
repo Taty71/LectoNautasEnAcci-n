@@ -74,6 +74,19 @@ function initLoginPage() {
   const mensajeLogin = document.getElementById('login-mensaje');
   const btnIngresar  = document.getElementById('btn-ingresar');
 
+  // Ojito: alternar visibilidad de contraseña
+  const toggleBtn  = document.getElementById('toggle-password');
+  const passInput  = document.getElementById('login-password');
+  if (toggleBtn && passInput) {
+    toggleBtn.addEventListener('click', () => {
+      const visible = passInput.type === 'text';
+      passInput.type = visible ? 'password' : 'text';
+      toggleBtn.textContent = visible ? '👁️' : '🙈';
+      toggleBtn.classList.toggle('activo', !visible);
+      toggleBtn.setAttribute('aria-label', visible ? 'Mostrar contraseña' : 'Ocultar contraseña');
+    });
+  }
+
   loginForm.addEventListener('submit', async (event) => {
     event.preventDefault();
 
