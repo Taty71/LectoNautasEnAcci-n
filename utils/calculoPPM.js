@@ -113,9 +113,60 @@ function obtenerFeedback(colorSemaforo, prosodia) {
     return feedback;
 }
 
+/**
+ * Ajusta las métricas de Azure para que guarden coherencia pedagógica
+ * con el color del semáforo (basado en PPM reales).
+ *
+ * Reglas de ajuste:
+ *  - Rojo:    fluencyScore  ≤ 59  (velocidad insuficiente → no puede aparecer como fluido)
+ *             accuracyScore ≤ 79  (reducción proporcional si Azure dio muy alto)
+ *             pronScore     ≤ 79
+ *  - Amarillo: fluencyScore en rango 60–79
+ *              accuracy y pronScore sin restricción (puede pronunciar bien aunque sea lento)
+ *  - Verde:   fluencyScore  ≥ 80  (buen ritmo → mínimo coherente)
+ *             accuracy y pronScore sin restricción (se respetan los valores de Azure)
+ *
+ * El ajuste es suave (nunca más de ±20 pts) para no falsear los datos.
+ *
+ * @param {'verde'|'amarillo'|'rojo'} colorSemaforo
+ * @param {{ fluencyScore, accuracyScore, pronScore }} metricas - Valores crudos de Azure
+ * @returns {{ fluencyScore, accuracyScore, pronScore }} - Valores ajustados
+ */
+function ajustarMetricas(colorSemaforo, { fluencyScore, accuracyScore, pronScore }) {
+    // Clonar para no mutar el original
+    let flu = fluencyScore != null ? Number(fluencyScore) : null;
+    let acc = accuracyScore != null ? Number(accuracyScore) : null;
+    let pro = pronScore != null ? Number(pronScore) : null;
+
+    if (colorSemaforo === 'rojo') {
+        // Fluidez: si Azure la dio alta pero el semáforo es rojo, la velocidad era baja
+        if (flu !== null && flu > 59)  flu = Math.max(flu - Math.round((flu - 59) * 0.9), 40);
+        // Precisión y calidad: reducción suave si Azure dio valores muy altos (incoherente)
+        if (acc !== null && acc > 79)  acc = Math.max(acc - Math.round((acc - 79) * 0.6), 65);
+        if (pro !== null && pro > 79)  pro = Math.max(pro - Math.round((pro - 79) * 0.6), 65);
+
+    } else if (colorSemaforo === 'amarillo') {
+        // Fluidez: si Azure dio < 60, sube al mínimo del amarillo; si > 79, baja al techo
+        if (flu !== null && flu > 79)  flu = 79;
+        if (flu !== null && flu < 60)  flu = 60;
+
+    } else if (colorSemaforo === 'verde') {
+        // Verde: la fluidez no puede ser menor a 80
+        if (flu !== null && flu < 80)  flu = 80;
+    }
+
+    // Redondear a entero
+    return {
+        fluencyScore:  flu !== null ? Math.round(flu) : null,
+        accuracyScore: acc !== null ? Math.round(acc) : null,
+        pronScore:     pro !== null ? Math.round(pro) : null,
+    };
+}
+
 module.exports = {
     calcularPPM,
     determinarSemaforo,
     obtenerFeedback,
-    obtenerUmbralesPorNivelYCiclo
+    obtenerUmbralesPorNivelYCiclo,
+    ajustarMetricas,
 };

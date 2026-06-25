@@ -6,7 +6,8 @@ const {
     calcularPPM,
     determinarSemaforo,
     obtenerFeedback,
-    obtenerUmbralesPorNivelYCiclo
+    obtenerUmbralesPorNivelYCiclo,
+    ajustarMetricas,
 } = require('../utils/calculoPPM');
 
 /**
@@ -82,9 +83,16 @@ router.post('/', verificarToken, permitirRoles('Docente', 'Administrador'), asyn
         const feedbackObj   = obtenerFeedback(colorSemaforo, prosodia);
         const umbrales      = obtenerUmbralesPorNivelYCiclo(nivel, ciclo, añoGrado);
 
+        // Ajustar métricas de Azure para coherencia pedagógica con el semáforo
+        const metricasAjustadas = ajustarMetricas(colorSemaforo, {
+            fluencyScore:  (fluencyScore  != null && !isNaN(fluencyScore))  ? Number(fluencyScore)  : null,
+            accuracyScore: (accuracyScore != null && !isNaN(accuracyScore)) ? Number(accuracyScore) : null,
+            pronScore:     (prosodyScore  != null && !isNaN(prosodyScore))  ? Number(prosodyScore)  : null,
+        });
+
         // Creamos el nuevo registro vinculando el id del docente autenticado (req.usuario.id)
         const nuevaLectura = new Lectura({
-            docenteId:              req.usuario.id,   // ← id del docente logueado (viene del token)
+            docenteId:              req.usuario.id,
             estudiante:             estudiante || undefined,
             textoTranscrito,
             palabrasContadas:       palabras,
@@ -93,16 +101,14 @@ router.post('/', verificarToken, permitirRoles('Docente', 'Administrador'), asyn
             colorSemaforo,
             prosodia:               prosodia || undefined,
             pausasDetectadas:       pausasDetectadas !== undefined ? Number(pausasDetectadas) : undefined,
-            // Guardar métricas de Azure solo si vinieron en el request y son números válidos
-            fluencyScore:  (fluencyScore  != null && !isNaN(fluencyScore))  ? Number(fluencyScore)  : undefined,
-            accuracyScore: (accuracyScore != null && !isNaN(accuracyScore)) ? Number(accuracyScore) : undefined,
-            prosodyScore:  (prosodyScore  != null && !isNaN(prosodyScore))  ? Number(prosodyScore)  : undefined,
-            feedback:               feedbackObj?.mensaje || undefined
+            // Guardar métricas ya ajustadas pedagógicamente
+            fluencyScore:  metricasAjustadas.fluencyScore  ?? undefined,
+            accuracyScore: metricasAjustadas.accuracyScore ?? undefined,
+            prosodyScore:  metricasAjustadas.pronScore     ?? undefined,
+            feedback:      feedbackObj?.mensaje || undefined
         });
         await nuevaLectura.save();
 
-        // Devolvemos las métricas de Azure junto con el resultado del semáforo
-        // para que el frontend pueda mostrar las barras sin otro fetch.
         res.json({
             success: true, ppm, color: colorSemaforo, nivel, ciclo, umbrales, ...feedbackObj,
             fluencyScore:  nuevaLectura.fluencyScore  ?? null,
