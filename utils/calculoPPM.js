@@ -133,29 +133,29 @@ function obtenerFeedback(colorSemaforo, prosodia) {
  * @returns {{ fluencyScore, accuracyScore, pronScore }} - Valores ajustados
  */
 function ajustarMetricas(colorSemaforo, { fluencyScore, accuracyScore, pronScore }) {
-    // Clonar para no mutar el original
     let flu = fluencyScore != null ? Number(fluencyScore) : null;
     let acc = accuracyScore != null ? Number(accuracyScore) : null;
     let pro = pronScore != null ? Number(pronScore) : null;
 
     if (colorSemaforo === 'rojo') {
-        // Fluidez: si Azure la dio alta pero el semáforo es rojo, la velocidad era baja
-        if (flu !== null && flu > 59)  flu = Math.max(flu - Math.round((flu - 59) * 0.9), 40);
-        // Precisión y calidad: reducción suave si Azure dio valores muy altos (incoherente)
-        if (acc !== null && acc > 79)  acc = Math.max(acc - Math.round((acc - 79) * 0.6), 65);
-        if (pro !== null && pro > 79)  pro = Math.max(pro - Math.round((pro - 79) * 0.6), 65);
+        // Rojo: lectura muy lenta o muy mala → caps duros en las 3 barras
+        // Azure mide fonética, no velocidad; aplicamos techo fijo para coherencia visual.
+        if (flu !== null) flu = Math.min(flu, 59);   // fluidez: max 59
+        if (acc !== null) acc = Math.min(acc, 62);   // precisión: max 62
+        if (pro !== null) pro = Math.min(pro, 62);   // calidad general: max 62
 
     } else if (colorSemaforo === 'amarillo') {
-        // Fluidez: si Azure dio < 60, sube al mínimo del amarillo; si > 79, baja al techo
-        if (flu !== null && flu > 79)  flu = 79;
-        if (flu !== null && flu < 60)  flu = 60;
+        // Amarillo: clampear fluidez al rango 60-79; precisión y calidad sin tope alto
+        if (flu !== null) flu = Math.max(60, Math.min(flu, 79));
+        // Precisión/calidad: si Azure dio muy bajo, no bajar más del umbral amarillo
+        if (acc !== null && acc < 60) acc = 60;
+        if (pro !== null && pro < 60) pro = 60;
 
     } else if (colorSemaforo === 'verde') {
-        // Verde: la fluidez no puede ser menor a 80
-        if (flu !== null && flu < 80)  flu = 80;
+        // Verde: fluidez mínimo 80; precisión y calidad se respetan tal cual Azure
+        if (flu !== null) flu = Math.max(flu, 80);
     }
 
-    // Redondear a entero
     return {
         fluencyScore:  flu !== null ? Math.round(flu) : null,
         accuracyScore: acc !== null ? Math.round(acc) : null,

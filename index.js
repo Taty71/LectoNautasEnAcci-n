@@ -67,6 +67,11 @@ const limiteAuth = rateLimit({
   }
 });
 
+// ── 5a. RUTA RAÍZ → redirigir siempre a login ─────────────────────────────────
+// La lógica de sesión (token en localStorage) se maneja en el cliente:
+// si ya tiene token válido, login.html lo redirige a index.html automáticamente.
+app.get('/', (req, res) => res.redirect('/login.html'));
+
 // ── 5. ARCHIVOS ESTÁTICOS ─────────────────────────────────────────────────────
 // Servimos la interfaz gráfica (HTML, CSS, JS del cliente).
 // En desarrollo desactivamos el caché para que los cambios en CSS/JS
